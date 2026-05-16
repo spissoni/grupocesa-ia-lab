@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Relevamiento IA LAB - GrupoCESA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a7d5f;
+            --primary-light: #2a9d7f;
+            --secondary: #0f4c3a;
+            --accent: #f5a623;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --white: #ffffff;
+            --light-gray: #f5f7fa;
+            --border-gray: #e0e6ed;
+            --text-dark: #1a2332;
+            --text-light: #7f8c8d;
+            --shadow: 0 4px 12px rgba(26, 125, 95, 0.1);
+            --shadow-lg: 0 8px 24px rgba(26, 125, 95, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .header {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--primary);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--text-dark);
+            margin-top: 8px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: var(--text-light);
+            font-size: 1rem;
+            margin-top: 4px;
+        }
+
+        .progress-badge {
+            background: #e8f7f5;
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .progress-indicator {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--light-gray);
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin: 0 auto 8px;
+            border: 2px solid var(--border-gray);
+            transition: all 0.3s;
+        }
+
+        .step-number.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(26, 125, 95, 0.3);
+        }
+
+        .step-number.completed {
+            background: var(--success);
+            color: var(--white);
+            border-color: var(--success);
+        }
+
+        .step-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-light);
+        }
+
+        .step-label.active {
+            color: var(--primary);
+        }
+
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: var(--border-gray);
+            margin: 0 5px;
+            position: relative;
+            top: -25px;
+        }
+
+        .step-line.completed {
+            background: var(--success);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .form-container {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--light-gray);
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 28px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+
+        .form-label .required {
+            color: var(--danger);
+        }
+
+        .form-label .hint {
+            display: block;
+            font-weight: 400;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border-gray);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: var(--white);
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 125, 95, 0.1);
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 14px;
+            border: 2px solid var(--border-gray);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--white);
+        }
+
+        .option-item:hover {
+            border-color: var(--primary);
+            background: #f9fdfb;
+        }
+
+        .option-item.selected {
+            border-color: var(--primary);
+            background: #e8f7f5;
+            box-shadow: 0 0 0 3px rgba(26, 125, 95, 0.1);
+        }
+
+        input[type="checkbox"],
+        input[type="radio"] {
+            margin-right: 8px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        .option-label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .custom-input {
+            margin-left: 26px;
+            padding: 10px 12px;
+            border: 1px solid var(--border-gray);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            background: var(--light-gray);
+            display: none;
+            margin-top: 8px;
+        }
+
+        .custom-input.show {
+            display: block;
+        }
+
+        .slider-container {
+            margin: 20px 0;
+        }
+
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(to right, #ffccbc, #c8e6c9);
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(26, 125, 95, 0.3);
+            transition: all 0.3s;
+        }
+
+        .slider::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(26, 125, 95, 0.4);
+        }
+
+        .slider::-moz-range-thumb {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 8px rgba(26, 125, 95, 0.3);
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .slider-value {
+            text-align: center;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 8px;
+            font-size: 1.2rem;
+        }
+
+        .slider-text {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 40px;
+            justify-content: space-between;
+        }
+
+        button {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 150px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(26, 125, 95, 0.2);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(26, 125, 95, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--light-gray);
+            color: var(--text-dark);
+            border: 1px solid var(--border-gray);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--border-gray);
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideDown 0.3s ease;
+            border-left: 4px solid;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border-color: #28a745;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .success-section {
+            background: linear-gradient(135deg, #fff9f0 0%, #ffe8cc 100%);
+            border: 2px dashed var(--accent);
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .success-section.show {
+            display: block;
+        }
+
+        .success-message h2 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .success-message p {
+            color: var(--text-light);
+            margin: 8px 0;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #1565c0;
+        }
+
+        .score-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: var(--white);
+            padding: 12px 24px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-top">
+            <div>
+                <div class="logo">🎯 GRUPOCESA</div>
+                <h1>Relevamiento IA LAB</h1>
+                <p>Mapeo de madurez y necesidades de capacitación en IA</p>
+            </div>
+            <div style="text-align: right;">
+                <div class="progress-badge" id="stageBadge">📊 Etapa 1 de 3</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PROGRESS INDICATOR -->
+    <div class="progress-indicator">
+        <div class="progress-steps">
+            <div class="progress-step">
+                <div class="step-number active" id="step1">1</div>
+                <div class="step-label active" id="label1">👤 Datos</div>
+            </div>
+            <div class="step-line" id="line1"></div>
+            <div class="progress-step">
+                <div class="step-number" id="step2">2</div>
+                <div class="step-label" id="label2">🤖 Experiencia</div>
+            </div>
+            <div class="step-line" id="line2"></div>
+            <div class="progress-step">
+                <div class="step-number" id="step3">3</div>
+                <div class="step-label" id="label3">🎓 Capacitación</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+        <!-- FORM CONTAINER -->
+        <div class="form-container">
+            <div id="message"></div>
+
+            <form id="surveyForm">
+                <!-- TAB 1: DATOS -->
+                <div id="tab-datos" class="tab-content active">
+                    <div class="section-title">👤 Información Personal</div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Nombre <span class="required">*</span>
+                            <span class="hint">Cómo te presentarías formalmente</span>
+                        </label>
+                        <input type="text" id="nombre" placeholder="Ej: Juan Pérez García" required>
+                    </div>
+
+                    <div class="input-grid">
+                        <div class="form-group">
+                            <label class="form-label">Email <span class="required">*</span></label>
+                            <input type="email" id="email" placeholder="tu@empresa.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Área <span class="required">*</span></label>
+                            <select id="area" required>
+                                <option value="">Selecciona tu área...</option>
+                                <option value="Desarrollo">🔧 Desarrollo</option>
+                                <option value="Omnicanalidad">📞 Omnicanalidad</option>
+                                <option value="Customer Success">💬 Customer Success</option>
+                                <option value="Comercial">💼 Comercial</option>
+                                <option value="Dirección">👔 Dirección</option>
+                                <option value="Administración">📊 Administración</option>
+                                <option value="Mesa de Ayuda">🆘 Mesa de Ayuda</option>
+                                <option value="Telefonía">☎️ Telefonía</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="input-grid">
+                        <div class="form-group">
+                            <label class="form-label">Puesto/Rol <span class="required">*</span></label>
+                            <input type="text" id="puesto" placeholder="Ej: Senior Developer" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Antigüedad en GrupoCESA</label>
+                            <select id="antiguedad">
+                                <option value="">Selecciona...</option>
+                                <option value="< 6 meses">Menos de 6 meses</option>
+                                <option value="6-12 meses">6-12 meses</option>
+                                <option value="1-2 años">1-2 años</option>
+                                <option value="2-5 años">2-5 años</option>
+                                <option value="> 5 años">Más de 5 años</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <div></div>
+                        <button type="button" class="btn-primary" onclick="nextTab('experiencia')">Siguiente ➡️</button>
+                    </div>
+                </div>
+
+                <!-- TAB 2: EXPERIENCIA IA -->
+                <div id="tab-experiencia" class="tab-content">
+                    <div class="section-title">🤖 Experiencia con IA</div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Proximidad actual con IA <span class="required">*</span>
+                            <span class="hint">¿Qué tan integrada está IA en tu día a día?</span>
+                        </label>
+                        <div class="slider-container">
+                            <input type="range" id="proximidad" class="slider" min="0" max="5" value="2" oninput="updateSlider(this)" required>
+                            <div class="slider-labels">
+                                <span>No la uso</span>
+                                <span>Uso diario</span>
+                            </div>
+                            <div class="slider-value">
+                                <span id="sliderValue">2</span>/5
+                            </div>
+                            <div class="slider-text" id="sliderText">Uso ocasional</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Herramientas de IA probadas <span class="required">*</span>
+                            <span class="hint">Marca todas las que hayas utilizado</span>
+                        </label>
+                        <div class="options-grid">
+                            <label class="option-item">
+                                <input type="checkbox" name="herramientas" value="ChatGPT">
+                                <span class="option-label">ChatGPT</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="herramientas" value="Claude">
+                                <span class="option-label">Claude</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="herramientas" value="DeepSeek">
+                                <span class="option-label">DeepSeek</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="herramientas" value="Copilot">
+                                <span class="option-label">Copilot</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="herramientas" value="Gemini">
+                                <span class="option-label">Gemini</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="herramientas" value="Perplexity">
+                                <span class="option-label">Perplexity</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="herramientas" value="Imagen">
+                                <span class="option-label">Imagen</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="herramientas" value="Otro">
+                                <span class="option-label">Otro</span>
+                            </label>
+                        </div>
+                        <input type="text" id="herramientas-otro" class="custom-input" placeholder="Especifica qué herramienta">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Casos de uso actuales <span class="required">*</span>
+                            <span class="hint">¿Para qué la utilizas?</span>
+                        </label>
+                        <div class="options-grid">
+                            <label class="option-item">
+                                <input type="checkbox" name="tareas" value="Redacción">
+                                <span class="option-label">Redacción</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="tareas" value="Resumen">
+                                <span class="option-label">Resumen</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="tareas" value="Análisis datos">
+                                <span class="option-label">Análisis datos</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="tareas" value="Código">
+                                <span class="option-label">Código</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="tareas" value="Búsqueda">
+                                <span class="option-label">Búsqueda</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="tareas" value="Visual">
+                                <span class="option-label">Visual</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="tareas" value="Diseño">
+                                <span class="option-label">Diseño</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="tareas" value="Otro">
+                                <span class="option-label">Otro</span>
+                            </label>
+                        </div>
+                        <input type="text" id="tareas-otro" class="custom-input" placeholder="Especifica qué caso de uso">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Tarea más repetitiva <span class="required">*</span>
+                            <span class="hint">Describe lo que más tiempo te quita</span>
+                        </label>
+                        <textarea id="tareaRepetitiva" placeholder="Ej: Resumir reportes de clientes, escribir documentación, revisar código..." required></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="button" class="btn-secondary" onclick="previousTab()">⬅️ Anterior</button>
+                        <button type="button" class="btn-primary" onclick="nextTab('capacitacion')">Siguiente ➡️</button>
+                    </div>
+                </div>
+
+                <!-- TAB 3: CAPACITACIÓN -->
+                <div id="tab-capacitacion" class="tab-content">
+                    <div class="section-title">🎓 Necesidades de Capacitación</div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Temas que te interesa aprender <span class="required">*</span>
+                            <span class="hint">¿Qué necesitas aprender?</span>
+                        </label>
+                        <div class="options-grid">
+                            <label class="option-item">
+                                <input type="checkbox" name="interes" value="Prompts">
+                                <span class="option-label">Prompts</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="interes" value="Seguridad">
+                                <span class="option-label">Seguridad</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="interes" value="Casos uso">
+                                <span class="option-label">Casos uso</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="interes" value="Comparativa">
+                                <span class="option-label">Comparativa</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="interes" value="Integraciones">
+                                <span class="option-label">Integraciones</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="interes" value="IA en Ventas">
+                                <span class="option-label">IA en Ventas</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="interes" value="IA en Atención">
+                                <span class="option-label">IA en Atención</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="interes" value="IA en Procesos">
+                                <span class="option-label">IA en Procesos</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            ⚠️ ¿Qué te frena de usar IA en tu área? <span class="required">*</span>
+                            <span class="hint">Selecciona todo lo que aplique</span>
+                        </label>
+                        <div class="options-grid">
+                            <label class="option-item">
+                                <input type="checkbox" name="barreras" value="No sé por dónde empezar">
+                                <span class="option-label">No sé por dónde empezar</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="barreras" value="Miedo perder job/skills">
+                                <span class="option-label">Miedo perder job/skills</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="barreras" value="Privacidad/seguridad">
+                                <span class="option-label">Privacidad/seguridad</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="barreras" value="No hay herramientas">
+                                <span class="option-label">No hay herramientas</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="barreras" value="Está prohibido">
+                                <span class="option-label">Está prohibido</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="barreras" value="No veo el ROI">
+                                <span class="option-label">No veo el ROI</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="barreras" value="Mis clientes no entienden">
+                                <span class="option-label">Mis clientes no entienden</span>
+                            </label>
+                            <label class="option-item">
+                                <input type="checkbox" name="barreras" value="Ninguna, estoy dentro">
+                                <span class="option-label">Ninguna, estoy dentro</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="input-grid">
+                        <div class="form-group">
+                            <label class="form-label">Disponibilidad</label>
+                            <select id="disponibilidad">
+                                <option value="">Selecciona...</option>
+                                <option value="Sí total">Sí, disponibilidad total</option>
+                                <option value="Sí parcial">Sí, con ajustes</option>
+                                <option value="No seguro">No sé aún</option>
+                                <option value="Virtual">Preferencia virtual</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Horario preferido</label>
+                            <select id="horario">
+                                <option value="">Selecciona...</option>
+                                <option value="Mañana">Mañana (9-12)</option>
+                                <option value="Tarde">Tarde (14-17)</option>
+                                <option value="Flexible">Flexible</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Comentarios adicionales</label>
+                        <textarea id="comentarios" placeholder="Comparte tus expectativas, sugerencias..." style="min-height: 80px;"></textarea>
+                    </div>
+
+                    <!-- BUTTONS LAST STAGE -->
+                    <div class="button-group">
+                        <button type="button" class="btn-secondary" onclick="previousTab()">⬅️ Anterior</button>
+                        <button type="submit" class="btn-primary" id="submitBtn">✅ Enviar Respuestas</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- SUCCESS SECTION -->
+            <div id="successSection" class="success-section">
+                <div class="success-message">
+                    <h2>✅ ¡Respuestas Guardadas!</h2>
+                    <p>Tu formulario se ha enviado correctamente a Google Sheet</p>
+                    
+                    <div class="score-badge" id="scoreBadge">Score: --</div>
+                    <div class="score-badge" id="levelBadge" style="margin-left: 12px; background: #4CAF50;">Nivel: --</div>
+                    
+                    <div class="info-box">
+                        <strong>ℹ️ Próximos pasos:</strong> Recibirás un email de confirmación con tu puntuación y próximamente información sobre el taller personalizado.
+                    </div>
+                    
+                    <button class="btn-primary" onclick="resetFormulario()" style="margin-top: 20px;">🔄 Completar otro formulario</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ✅ WEBHOOK URL FINAL - WEB APP
+        const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbxxXGLjYUWqIJp3ielyJTykDmBxf8wQUSkbaaHcixu41Igbg2tPR8NCse65RemEmu9PSQ/exec';
+
+        const proximityTexts = [
+            'No la uso nunca',
+            'Muy baja exposición',
+            'Uso ocasional',
+            'Uso regular',
+            'Uso frecuente',
+            'Integrada en mi día'
+        ];
+
+        const tabs = ['datos', 'experiencia', 'capacitacion'];
+        let currentTabIndex = 0;
+        let formDataGlobal = {};
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('surveyForm').addEventListener('submit', handleSubmit);
+            setupCheckboxListeners();
+        });
+
+        // Setup checkbox visual feedback
+        function setupCheckboxListeners() {
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    this.closest('.option-item').classList.toggle('selected');
+                    toggleCustomInput(this);
+                });
+            });
+        }
+
+        // Toggle custom input
+        function toggleCustomInput(checkbox) {
+            if (checkbox.value === 'Otro') {
+                const fieldName = checkbox.name;
+                const inputId = `${fieldName}-otro`;
+                const inputElement = document.getElementById(inputId);
+                
+                if (inputElement) {
+                    if (checkbox.checked) {
+                        inputElement.classList.add('show');
+                        inputElement.focus();
+                    } else {
+                        inputElement.classList.remove('show');
+                        inputElement.value = '';
+                    }
+                }
+            }
+        }
+
+        // Navigation
+        function nextTab(tabName) {
+            const tabIndex = tabs.indexOf(tabName);
+            if (tabIndex > -1) {
+                currentTabIndex = tabIndex;
+                updateTab();
+            }
+        }
+
+        function previousTab() {
+            if (currentTabIndex > 0) {
+                currentTabIndex--;
+                updateTab();
+            }
+        }
+
+        function updateTab() {
+            document.querySelectorAll('.tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+
+            const currentTab = tabs[currentTabIndex];
+            document.getElementById(`tab-${currentTab}`).classList.add('active');
+            updateProgressIndicator();
+            updateStageBadge();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+
+        function updateProgressIndicator() {
+            for (let i = 0; i < tabs.length; i++) {
+                const stepNum = document.getElementById(`step${i + 1}`);
+                const label = document.getElementById(`label${i + 1}`);
+                const line = document.getElementById(`line${i}`);
+
+                if (i < currentTabIndex) {
+                    stepNum.classList.remove('active');
+                    stepNum.classList.add('completed');
+                    label.classList.remove('active');
+                    if (line) line.classList.add('completed');
+                } else if (i === currentTabIndex) {
+                    stepNum.classList.remove('completed');
+                    stepNum.classList.add('active');
+                    label.classList.add('active');
+                } else {
+                    stepNum.classList.remove('active', 'completed');
+                    label.classList.remove('active');
+                }
+            }
+        }
+
+        function updateStageBadge() {
+            const stage = currentTabIndex + 1;
+            document.getElementById('stageBadge').textContent = `📊 Etapa ${stage} de 3`;
+        }
+
+        function updateSlider(slider) {
+            document.getElementById('sliderValue').textContent = slider.value;
+            document.getElementById('sliderText').textContent = proximityTexts[slider.value];
+        }
+
+        // Submit form
+        async function handleSubmit(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '⏳ Enviando...';
+
+            const nombre = document.getElementById('nombre').value;
+            
+            let herramientas = Array.from(document.querySelectorAll('input[name="herramientas"]:checked')).map(e => e.value);
+            const herramientasOtro = document.getElementById('herramientas-otro').value;
+            if (herramientasOtro) {
+                herramientas = herramientas.map(h => h === 'Otro' ? `Otro: ${herramientasOtro}` : h);
+            }
+
+            let tareas = Array.from(document.querySelectorAll('input[name="tareas"]:checked')).map(e => e.value);
+            const tareasOtro = document.getElementById('tareas-otro').value;
+            if (tareasOtro) {
+                tareas = tareas.map(t => t === 'Otro' ? `Otro: ${tareasOtro}` : t);
+            }
+
+            const data = {
+                timestamp: new Date().toISOString(),
+                nombre: nombre,
+                email: document.getElementById('email').value,
+                area: document.getElementById('area').value,
+                puesto: document.getElementById('puesto').value,
+                antiguedad: document.getElementById('antiguedad').value,
+                proximidad: document.getElementById('proximidad').value,
+                herramientas: herramientas,
+                tareas: tareas,
+                tareaRepetitiva: document.getElementById('tareaRepetitiva').value,
+                interes: Array.from(document.querySelectorAll('input[name="interes"]:checked')).map(e => e.value),
+                barreras: Array.from(document.querySelectorAll('input[name="barreras"]:checked')).map(e => e.value),
+                disponibilidad: document.getElementById('disponibilidad').value,
+                horario: document.getElementById('horario').value,
+                comentarios: document.getElementById('comentarios').value
+            };
+
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    formDataGlobal = result;
+                    
+                    // Mostrar score y nivel
+                    document.getElementById('scoreBadge').textContent = `Score: ${result.score}/100`;
+                    document.getElementById('levelBadge').textContent = `Nivel: ${result.level}`;
+                    
+                    // Mostrar éxito
+                    document.getElementById('surveyForm').style.display = 'none';
+                    document.getElementById('successSection').classList.add('show');
+                    showMessage('✅ ¡Respuestas enviadas a Google Sheet!', 'success');
+                    window.scrollTo({top: 0, behavior: 'smooth'});
+                } else {
+                    showMessage('❌ Error: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showMessage('❌ Error de conexión: ' + error.message, 'error');
+                console.error('Error:', error);
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '✅ Enviar Respuestas';
+        }
+
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = `message show ${type}`;
+            setTimeout(() => msg.classList.remove('show'), 5000);
+        }
+
+        function resetFormulario() {
+            document.getElementById('surveyForm').reset();
+            document.getElementById('successSection').classList.remove('show');
+            document.getElementById('surveyForm').style.display = 'block';
+            currentTabIndex = 0;
+            updateTab();
+            updateSlider(document.getElementById('proximidad'));
+            document.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
+            document.querySelectorAll('.custom-input').forEach(el => el.classList.remove('show'));
+        }
+    </script>
+</body>
+</html>

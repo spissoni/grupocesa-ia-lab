@@ -146,9 +146,6 @@ function doGet(e) {
         })
       ).setMimeType(ContentService.MimeType.JSON);
 
-      out.addHeader('Access-Control-Allow-Origin', '*');
-      out.addHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-
       return out;
     }
 
@@ -163,7 +160,6 @@ function doGet(e) {
         })
       ).setMimeType(ContentService.MimeType.JSON);
 
-      out.addHeader('Access-Control-Allow-Origin', '*');
       return out;
     }
 
@@ -180,7 +176,6 @@ function doGet(e) {
         })
       ).setMimeType(ContentService.MimeType.JSON);
 
-      out.addHeader('Access-Control-Allow-Origin', '*');
       return out;
     }
 
@@ -203,10 +198,6 @@ function doGet(e) {
       })
     ).setMimeType(ContentService.MimeType.JSON);
 
-    out.addHeader('Access-Control-Allow-Origin', '*');
-    out.addHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-    out.addHeader('Access-Control-Allow-Headers', 'Content-Type');
-
     return out;
 
   } catch (error) {
@@ -219,7 +210,6 @@ function doGet(e) {
       })
     ).setMimeType(ContentService.MimeType.JSON);
 
-    out.addHeader('Access-Control-Allow-Origin', '*');
     return out;
   }
 }
@@ -309,9 +299,6 @@ function doPost(e) {
       sentimiento: sentiment.label
     })).setMimeType(ContentService.MimeType.JSON);
 
-    output.addHeader('Access-Control-Allow-Origin', '*');
-    output.addHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-    output.addHeader('Access-Control-Allow-Headers', 'Content-Type');
 
     return output;
 
@@ -323,9 +310,6 @@ function doPost(e) {
       error: error.toString()
     })).setMimeType(ContentService.MimeType.JSON);
 
-    output.addHeader('Access-Control-Allow-Origin', '*');
-    output.addHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-    output.addHeader('Access-Control-Allow-Headers', 'Content-Type');
 
     return output;
   }
