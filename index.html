@@ -943,7 +943,7 @@
         // ============================================================
         // CONSTANTS & STATE
         // ============================================================
-        const WEBHOOK_URL = 'https://script.google.com/macros/d/1svzaUv7-Ts6oy0FnRCseL64zHaZpZq3MF9dzLUSsaIbLavOssIz7cHnY/exec';
+        const WEBHOOK_URL = 'https://formspree.io/f/mredzkel';
         const STORAGE_KEY = 'ialab_autosave_v1';
         const CHAR_LIMIT_TAREA = 500;
         const CHAR_LIMIT_COMENTARIOS = 300;
@@ -1298,41 +1298,48 @@
             try {
                 const response = await fetch(WEBHOOK_URL, {
                     method: 'POST',
+                    headers: {
+                        'Accept': 'application/json'
+                    },
                     body: JSON.stringify(data)
                 });
 
-                const result = await response.json();
-
-                if (result.success) {
+                if (response.ok) {
                     document.getElementById('surveyForm').style.display = 'none';
                     document.getElementById('buttonGroup').style.display = 'none';
 
+                    const score = Math.min(Math.max(
+                        15 +
+                        parseInt(data.proximidad || 0) * 12 +
+                        Math.min((data.herramientas ? data.herramientas.length : 0) * 5, 25) +
+                        Math.min((data.tareas ? data.tareas.length : 0) * 4, 20) +
+                        (data.tareaRepetitiva && data.tareaRepetitiva.length > 50 ? 10 : data.tareaRepetitiva && data.tareaRepetitiva.length > 20 ? 5 : 0) +
+                        Math.min((data.interes ? data.interes.length : 0) * 3, 15)
+                    , 0), 100);
+
+                    const level = score >= 67 ? 'Avanzado' : score >= 34 ? 'Intermedio' : 'Principiante';
+
                     const arcLength = 251;
-                    const fill = Math.round((result.score / 100) * arcLength);
+                    const fill = Math.round((score / 100) * arcLength);
                     document.getElementById('gaugeArc').setAttribute('stroke-dasharray', fill + ' ' + arcLength);
-                    document.getElementById('gaugeScore').textContent = result.score;
+                    document.getElementById('gaugeScore').textContent = score;
 
                     const levelColors = {
-                        '🟢 Avanzado': '#4CAF50',
-                        '🟡 Intermedio': '#FF9800',
-                        '🔴 Principiante': '#F44336'
+                        'Avanzado': '#4CAF50',
+                        'Intermedio': '#FF9800',
+                        'Principiante': '#F44336'
                     };
 
-                    Object.entries(levelColors).forEach(([lvl, color]) => {
-                        if (result.level.includes(lvl.split(' ')[1])) {
-                            document.getElementById('gaugeArc').style.stroke = color;
-                            document.getElementById('levelBadge').style.background = color;
-                        }
-                    });
-
-                    document.getElementById('scoreBadge').textContent = 'Score: ' + result.score;
-                    document.getElementById('levelBadge').textContent = 'Nivel: ' + result.level.split(' ')[1];
+                    document.getElementById('gaugeArc').style.stroke = levelColors[level];
+                    document.getElementById('levelBadge').style.background = levelColors[level];
+                    document.getElementById('scoreBadge').textContent = 'Score: ' + score;
+                    document.getElementById('levelBadge').textContent = 'Nivel: ' + level;
 
                     document.getElementById('successSection').classList.add('active');
 
                     localStorage.removeItem(STORAGE_KEY);
                 } else {
-                    alert('❌ Error: ' + result.error);
+                    alert('❌ Error: No se pudo enviar el formulario');
                 }
             } catch (error) {
                 alert('❌ Error al enviar el formulario: ' + error);
