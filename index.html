@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -193,8 +194,13 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         .form-section {
@@ -361,8 +367,8 @@
             cursor: pointer;
         }
 
-        input[type="checkbox"] + label,
-        input[type="radio"] + label {
+        input[type="checkbox"]+label,
+        input[type="radio"]+label {
             margin: 0;
             font-weight: 500;
         }
@@ -429,6 +435,7 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -574,6 +581,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="header">
         <div class="header-top">
@@ -601,28 +609,21 @@
 
                     <div class="form-group">
                         <label for="nombre">Nombre Completo *</label>
-                        <input type="text" id="nombre"
-                               aria-required="true"
-                               aria-describedby="nombre-error"
-                               placeholder="Ej: Juan Pérez García" required>
+                        <input type="text" id="nombre" aria-required="true" aria-describedby="nombre-error"
+                            placeholder="Ej: Juan Pérez García" required>
                         <span class="error-msg" id="nombre-error" role="alert"></span>
                     </div>
 
                     <div class="form-group">
                         <label for="email">Email *</label>
-                        <input type="email" id="email"
-                               aria-required="true"
-                               aria-describedby="email-error"
-                               placeholder="tu.email@empresa.com" required>
+                        <input type="email" id="email" aria-required="true" aria-describedby="email-error"
+                            placeholder="tu.email@empresa.com" required>
                         <span class="error-msg" id="email-error" role="alert"></span>
                     </div>
 
                     <div class="form-group">
                         <label for="area">Área / Departamento *</label>
-                        <select id="area"
-                                aria-required="true"
-                                aria-describedby="area-error"
-                                required>
+                        <select id="area" aria-required="true" aria-describedby="area-error" required>
                             <option value="">-- Selecciona tu área --</option>
                             <option value="Comercial">Comercial / Ventas</option>
                             <option value="Operaciones">Operaciones</option>
@@ -638,10 +639,8 @@
 
                     <div class="form-group">
                         <label for="puesto">Puesto / Rol *</label>
-                        <input type="text" id="puesto"
-                               aria-required="true"
-                               aria-describedby="puesto-error"
-                               placeholder="Ej: Gerente de Proyectos" required>
+                        <input type="text" id="puesto" aria-required="true" aria-describedby="puesto-error"
+                            placeholder="Ej: Gerente de Proyectos" required>
                         <span class="error-msg" id="puesto-error" role="alert"></span>
                     </div>
 
@@ -666,8 +665,7 @@
 
                     <div class="form-group">
                         <label>¿Qué tan próximo te sientes al uso de IA? *</label>
-                        <input type="range" id="proximidad" min="0" max="5" value="0"
-                               aria-required="true">
+                        <input type="range" id="proximidad" min="0" max="5" value="0" aria-required="true">
                         <div class="slider-labels">
                             <span>Muy alejado</span>
                             <span>Muy cercano</span>
@@ -677,7 +675,8 @@
 
                     <div class="form-group">
                         <label>Herramientas de IA que has usado *</label>
-                        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 12px;">Selecciona una o más</p>
+                        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 12px;">Selecciona una o
+                            más</p>
                         <div class="options-grid" id="herramientas-group">
                             <div class="option-item">
                                 <input type="checkbox" id="h1" name="herramientas" value="ChatGPT">
@@ -717,7 +716,8 @@
 
                     <div class="form-group">
                         <label>¿Para qué tareas usas IA? *</label>
-                        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 12px;">Selecciona una o más</p>
+                        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 12px;">Selecciona una o
+                            más</p>
                         <div class="options-grid" id="tareas-group">
                             <div class="option-item">
                                 <input type="checkbox" id="t1" name="tareas" value="Análisis de datos">
@@ -756,12 +756,10 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="tareaRepetitiva">¿Cuál es la tarea más repetitiva que haces y que IA podría automatizar? *</label>
-                        <textarea id="tareaRepetitiva"
-                                  aria-required="true"
-                                  aria-describedby="tareaRepetitiva-error"
-                                  placeholder="Describe la tarea en detalle..."
-                                  rows="4"></textarea>
+                        <label for="tareaRepetitiva">¿Cuál es la tarea más repetitiva que haces y que IA podría
+                            automatizar? *</label>
+                        <textarea id="tareaRepetitiva" aria-required="true" aria-describedby="tareaRepetitiva-error"
+                            placeholder="Describe la tarea en detalle..." rows="4"></textarea>
                         <span class="error-msg" id="tareaRepetitiva-error" role="alert"></span>
                         <div class="char-counter" id="tareaRepetitiva-counter">0 / 500 caracteres</div>
                     </div>
@@ -775,7 +773,8 @@
 
                     <div class="form-group">
                         <label>¿Cuáles son tus áreas de interés en IA?</label>
-                        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 12px;">Selecciona una o más</p>
+                        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 12px;">Selecciona una o
+                            más</p>
                         <div class="options-grid" id="interes-group">
                             <div class="option-item">
                                 <input type="checkbox" id="i1" name="interes" value="Introducción a IA">
@@ -814,7 +813,8 @@
 
                     <div class="form-group">
                         <label>¿Cuáles son las barreras principales para usar IA en tu trabajo?</label>
-                        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 12px;">Selecciona una o más</p>
+                        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 12px;">Selecciona una o
+                            más</p>
                         <div class="options-grid" id="barreras-group">
                             <div class="option-item">
                                 <input type="checkbox" id="b1" name="barreras" value="Falta de conocimiento">
@@ -875,9 +875,8 @@
 
                     <div class="form-group">
                         <label for="comentarios">Comentarios adicionales (opcional)</label>
-                        <textarea id="comentarios"
-                                  placeholder="Cuéntanos qué más debemos saber sobre tu contexto..."
-                                  rows="4"></textarea>
+                        <textarea id="comentarios" placeholder="Cuéntanos qué más debemos saber sobre tu contexto..."
+                            rows="4"></textarea>
                         <div class="char-counter" id="comentarios-counter">0 / 300 caracteres</div>
                     </div>
                 </div>
@@ -894,18 +893,16 @@
                     <div class="score-gauge-wrap">
                         <svg class="gauge-svg" viewBox="0 0 200 110" aria-label="Indicador de puntuación">
                             <!-- Background arc -->
-                            <path d="M 20 100 A 80 80 0 0 1 180 100"
-                                  fill="none" stroke="#e0e6ed" stroke-width="18" stroke-linecap="round"/>
+                            <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#e0e6ed" stroke-width="18"
+                                stroke-linecap="round" />
                             <!-- Fill arc -->
-                            <path id="gaugeArc" d="M 20 100 A 80 80 0 0 1 180 100"
-                                  fill="none" stroke="var(--primary)" stroke-width="18"
-                                  stroke-linecap="round"
-                                  stroke-dasharray="0 251"/>
+                            <path id="gaugeArc" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="var(--primary)"
+                                stroke-width="18" stroke-linecap="round" stroke-dasharray="0 251" />
                             <!-- Score text -->
-                            <text id="gaugeScore" x="100" y="88" text-anchor="middle"
-                                  class="gauge-label" fill="#1a7d5f">--</text>
-                            <text x="100" y="105" text-anchor="middle"
-                                  class="gauge-sublabel" fill="#7f8c8d">de 100</text>
+                            <text id="gaugeScore" x="100" y="88" text-anchor="middle" class="gauge-label"
+                                fill="#1a7d5f">--</text>
+                            <text x="100" y="105" text-anchor="middle" class="gauge-sublabel" fill="#7f8c8d">de
+                                100</text>
                         </svg>
                         <div class="score-badges">
                             <div class="score-badge" id="scoreBadge">Score: --</div>
@@ -915,10 +912,12 @@
 
                     <div class="info-box">
                         <strong>📧 Próximos pasos:</strong><br>
-                        Recibirás un email de confirmación con tu puntuación y próximamente información sobre el taller personalizado diseñado para ti.
+                        Recibirás un email de confirmación con tu puntuación y próximamente información sobre el taller
+                        personalizado diseñado para ti.
                     </div>
 
-                    <button type="button" class="btn btn-primary" onclick="resetFormulario()" style="margin-top: 20px; max-width: 300px; margin-left: auto; margin-right: auto;">
+                    <button type="button" class="btn btn-primary" onclick="resetFormulario()"
+                        style="margin-top: 20px; max-width: 300px; margin-left: auto; margin-right: auto;">
                         Completar otro formulario
                     </button>
                 </div>
@@ -929,9 +928,11 @@
     <!-- Button controls -->
     <div style="max-width: 900px; margin-left: auto; margin-right: auto; margin-bottom: 30px;">
         <div class="button-group" id="buttonGroup">
-            <button class="btn btn-secondary" id="prevBtn" onclick="previousTab()" style="display: none;">← Anterior</button>
+            <button class="btn btn-secondary" id="prevBtn" onclick="previousTab()" style="display: none;">←
+                Anterior</button>
             <button class="btn btn-primary" id="nextBtn" onclick="nextTab()">Siguiente →</button>
-            <button class="btn btn-primary" id="submitBtn" type="submit" form="surveyForm" style="display: none;">Enviar 🚀</button>
+            <button class="btn btn-primary" id="submitBtn" type="submit" form="surveyForm" style="display: none;">Enviar
+                🚀</button>
         </div>
     </div>
 
@@ -942,7 +943,7 @@
         // ============================================================
         // CONSTANTS & STATE
         // ============================================================
-        const WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbweQurLqoLaLNqp68DHzMhSmrDKPJiECYXufqUyHEK_6KizktwMEXTf5NBRFqA5YekqbQ/exec';
+        const WEBHOOK_URL = 'https://script.google.com/macros/d/1svzaUv7-Ts6oy0FnRCseL64zHaZpZq3MF9dzLUSsaIbLavOssIz7cHnY/useTriggerSource';
         const STORAGE_KEY = 'ialab_autosave_v1';
         const CHAR_LIMIT_TAREA = 500;
         const CHAR_LIMIT_COMENTARIOS = 300;
@@ -962,7 +963,7 @@
         // ============================================================
         // INITIALIZATION
         // ============================================================
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             setupProgressSteps();
             document.getElementById('surveyForm').addEventListener('submit', handleSubmit);
             setupCheckboxListeners();
@@ -1139,7 +1140,7 @@
                 const counter = document.getElementById(id + '-counter');
                 if (!el || !counter) return;
 
-                el.addEventListener('input', function() {
+                el.addEventListener('input', function () {
                     const len = this.value.length;
                     counter.textContent = len + ' / ' + limit + ' caracteres';
                     counter.className = 'char-counter' + (len > limit * 0.9 ? ' warn' : '') + (len > limit ? ' over' : '');
@@ -1152,7 +1153,7 @@
         // ============================================================
         function setupCheckboxListeners() {
             document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
+                checkbox.addEventListener('change', function () {
                     const item = this.closest('.option-item');
                     if (item) {
                         item.classList.toggle('selected', this.checked);
@@ -1177,9 +1178,9 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const slider = document.getElementById('proximidad');
-            slider.addEventListener('input', function() {
+            slider.addEventListener('input', function () {
                 updateSlider(this);
             });
             updateSlider(slider);
@@ -1257,7 +1258,7 @@
 
         function setupAutosave() {
             let timer;
-            document.getElementById('surveyForm').addEventListener('input', function() {
+            document.getElementById('surveyForm').addEventListener('input', function () {
                 clearTimeout(timer);
                 timer = setTimeout(saveToLocalStorage, 800);
             });
@@ -1297,6 +1298,9 @@
             try {
                 const response = await fetch(WEBHOOK_URL, {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify(data)
                 });
 
@@ -1355,4 +1359,5 @@
         }
     </script>
 </body>
+
 </html>
