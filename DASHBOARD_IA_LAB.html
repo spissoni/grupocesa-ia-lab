@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 Dashboard IA LAB - GrupoCESA</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a7d5f;
+            --primary-light: #2a9d7f;
+            --accent: #f5a623;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --danger: #F44336;
+            --white: #ffffff;
+            --light-gray: #f5f7fa;
+            --border-gray: #e0e6ed;
+            --text-dark: #1a2332;
+            --text-light: #7f8c8d;
+            --shadow: 0 4px 12px rgba(26, 125, 95, 0.1);
+            --shadow-lg: 0 8px 24px rgba(26, 125, 95, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--white);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .login-card h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .login-card p {
+            color: var(--text-light);
+            margin-bottom: 30px;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-gray);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .login-card input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 125, 95, 0.1);
+        }
+
+        .login-card button {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-card button:hover {
+            background: var(--primary-light);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .login-error {
+            color: var(--danger);
+            margin-top: 20px;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        #dashboardScreen {
+            display: none;
+        }
+
+        .dashboard {
+            padding: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header-bar {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        .header-bar h1 {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .header-bar .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-light);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--light-gray);
+            color: var(--text-dark);
+            border: 1px solid var(--border-gray);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-gray);
+        }
+
+        .filter-bar {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .filter-bar select,
+        .filter-bar input {
+            padding: 10px;
+            border: 1px solid var(--border-gray);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .filter-bar select:focus,
+        .filter-bar input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 125, 95, 0.1);
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--primary);
+        }
+
+        .card h3 {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .card.accent {
+            border-left-color: var(--accent);
+        }
+
+        .card.accent .value {
+            color: var(--accent);
+        }
+
+        .card.success {
+            border-left-color: var(--success);
+        }
+
+        .card.success .value {
+            color: var(--success);
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .chart-container h3 {
+            margin-bottom: 16px;
+            color: var(--text-dark);
+            font-size: 1.1rem;
+        }
+
+        canvas {
+            max-height: 300px;
+        }
+
+        .chart-container.tall {
+            grid-column: 1;
+        }
+
+        .data-table-container {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow-x: auto;
+        }
+
+        .data-table-search {
+            margin-bottom: 16px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .data-table-search input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border-gray);
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        table thead {
+            background: var(--light-gray);
+            border-bottom: 2px solid var(--border-gray);
+        }
+
+        table th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-gray);
+        }
+
+        table tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        .sentiment-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .sentiment-positivo {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+
+        .sentiment-neutro {
+            background: #f1f1f1;
+            color: #616161;
+        }
+
+        .sentiment-negativo {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
+
+        .error {
+            display: none;
+            background: #ffebee;
+            color: var(--danger);
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .header-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-actions {
+                width: 100%;
+                margin-top: 16px;
+            }
+
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-bar {
+                grid-template-columns: 1fr;
+            }
+
+            table {
+                font-size: 0.8rem;
+            }
+
+            table th, table td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOGIN SCREEN -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-card">
+            <h1>📊 Dashboard IA LAB</h1>
+            <p>GrupoCESA - Análisis de Respuestas</p>
+            <input type="password" id="tokenInput" placeholder="Ingresa el token de acceso"
+                   onkeypress="if(event.key==='Enter') handleLogin()">
+            <button onclick="handleLogin()">Acceder</button>
+            <div class="login-error" id="loginError"></div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD SCREEN -->
+    <div id="dashboardScreen">
+        <div class="dashboard">
+            <div class="header-bar">
+                <div>
+                    <h1>📊 Dashboard Análisis</h1>
+                    <div class="subtitle">Relevamiento de madurez IA - Respuestas y estadísticas en tiempo real</div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary" onclick="exportCSV()">📥 Descargar CSV</button>
+                    <button class="btn btn-secondary" onclick="handleLogout()">Salir</button>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <select id="filterArea" onchange="applyFilters()">
+                    <option value="">Todas las áreas</option>
+                    <option value="Comercial">Comercial / Ventas</option>
+                    <option value="Operaciones">Operaciones</option>
+                    <option value="Marketing">Marketing / Comunicación</option>
+                    <option value="RRHH">RRHH</option>
+                    <option value="IT">IT</option>
+                    <option value="Finanzas">Finanzas</option>
+                    <option value="Dirección">Dirección</option>
+                </select>
+
+                <select id="filterNivel" onchange="applyFilters()">
+                    <option value="">Todos los niveles</option>
+                    <option value="Avanzado">Avanzado</option>
+                    <option value="Intermedio">Intermedio</option>
+                    <option value="Principiante">Principiante</option>
+                </select>
+
+                <input type="date" id="filterFrom" onchange="applyFilters()" placeholder="Desde">
+                <input type="date" id="filterTo" onchange="applyFilters()" placeholder="Hasta">
+            </div>
+
+            <div class="summary-cards">
+                <div class="card">
+                    <h3>Total de Respuestas</h3>
+                    <div class="value" id="cardTotal">0</div>
+                </div>
+                <div class="card accent">
+                    <h3>Score Promedio</h3>
+                    <div class="value" id="cardAvgScore">--</div>
+                </div>
+                <div class="card success">
+                    <h3>% Avanzados</h3>
+                    <div class="value" id="cardAvanzado">--</div>
+                </div>
+                <div class="card">
+                    <h3>% Principiantes</h3>
+                    <div class="value" id="cardPrincipiante">--</div>
+                </div>
+            </div>
+
+            <div class="chart-grid">
+                <div class="chart-container">
+                    <h3>Distribución de Scores</h3>
+                    <canvas id="scoreHistogram"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Niveles de Madurez</h3>
+                    <canvas id="levelDonut"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Por Área</h3>
+                    <canvas id="areaBar"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Proximidad a IA (0-5)</h3>
+                    <canvas id="proximidadBar"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Herramientas más usadas</h3>
+                    <canvas id="toolsBar"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Casos de uso principales</h3>
+                    <canvas id="tasksBar"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Áreas de Interés (Top 8)</h3>
+                    <canvas id="interestsRadar"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Barreras principales</h3>
+                    <canvas id="barriersBar"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Disponibilidad para capacitación</h3>
+                    <canvas id="availabilityPie"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Horarios preferidos</h3>
+                    <canvas id="horarioPie"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Análisis de Sentimiento</h3>
+                    <canvas id="sentimentDonut"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3>Respuestas por Día</h3>
+                    <canvas id="timeline"></canvas>
+                </div>
+            </div>
+
+            <div class="data-table-container">
+                <h3 style="margin-bottom: 16px;">📋 Detalle de Respuestas</h3>
+                <div class="data-table-search">
+                    <input type="text" id="tableSearch" placeholder="Buscar por nombre, email, área..."
+                           onkeyup="renderTable(filtered)">
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Área</th>
+                            <th>Puesto</th>
+                            <th>Score</th>
+                            <th>Nivel</th>
+                            <th>Sentimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr><td colspan="8" style="text-align: center; color: var(--text-light);">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        // CONSTANTS
+        // ============================================================
+        const WEBHOOK_BASE = 'https://script.google.com/macros/s/AKfycbxxXGLjYUWqIJp3ielyJTykDmBxf8wQUSkbaaHcixu41Igbg2tPR8NCse65RemEmu9PSQ/exec';
+        const API_TOKEN = 'GRUPOCESA2026';
+        const API_URL = WEBHOOK_BASE + '?token=' + API_TOKEN;
+
+        // ============================================================
+        // STATE
+        // ============================================================
+        let allData = [];
+        let filtered = [];
+        const chartInstances = {};
+
+        // ============================================================
+        // AUTHENTICATION
+        // ============================================================
+        function handleLogin() {
+            const token = document.getElementById('tokenInput').value.trim();
+            if (token === API_TOKEN) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboardScreen').style.display = 'block';
+                sessionStorage.setItem('dashAuth', '1');
+                fetchData();
+            } else {
+                const err = document.getElementById('loginError');
+                err.textContent = '❌ Token incorrecto. Intentá de nuevo.';
+                err.style.display = 'block';
+            }
+        }
+
+        function handleLogout() {
+            sessionStorage.removeItem('dashAuth');
+            location.reload();
+        }
+
+        // Check auth on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            if (sessionStorage.getItem('dashAuth') === '1') {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboardScreen').style.display = 'block';
+                fetchData();
+            }
+        });
+
+        // ============================================================
+        // DATA FETCHING & PARSING
+        // ============================================================
+        async function fetchData() {
+            const loading = document.querySelector('.loading');
+            const error = document.querySelector('.error');
+            if (loading) loading.style.display = 'block';
+            if (error) error.style.display = 'none';
+
+            try {
+                const resp = await fetch(API_URL);
+                const json = await resp.json();
+
+                if (!json.success) throw new Error(json.error || 'API error');
+
+                allData = parseRows(json.data || []);
+                applyFilters();
+
+            } catch (e) {
+                if (error) {
+                    error.textContent = '❌ No se pudieron cargar los datos: ' + e.message;
+                    error.style.display = 'block';
+                }
+            } finally {
+                if (loading) loading.style.display = 'none';
+            }
+        }
+
+        function parseRows(rows) {
+            return rows.map(row => ({
+                timestamp: new Date(row['Timestamp']),
+                nombre: row['Nombre'] || '',
+                email: row['Email'] || '',
+                area: row['Área'] || row['Area'] || '',
+                puesto: row['Puesto'] || '',
+                antiguedad: row['Antigüedad'] || row['Antiguedad'] || '',
+                proximidad: parseInt(row['Proximidad']) || 0,
+                herramientas: splitPipe(row['Herramientas']),
+                tareas: splitPipe(row['Tareas']),
+                intereses: splitPipe(row['Intereses']),
+                barreras: splitPipe(row['Barreras']),
+                disponibilidad: row['Disponibilidad'] || '',
+                horario: row['Horario'] || '',
+                score: parseFloat(row['Score']) || 0,
+                nivel: cleanLevel(row['Nivel'] || ''),
+                sentimiento: row['Sentimiento'] || 'Neutral'
+            }));
+        }
+
+        function splitPipe(str) {
+            return str ? str.split('|').map(s => s.trim()).filter(Boolean) : [];
+        }
+
+        function cleanLevel(str) {
+            return str.replace(/^[\u{1F300}-\u{1FAFF}\s]+/u, '').trim();
+        }
+
+        // ============================================================
+        // FILTERING
+        // ============================================================
+        function applyFilters() {
+            const areaVal = document.getElementById('filterArea').value;
+            const nivelVal = document.getElementById('filterNivel').value;
+            const dateFrom = document.getElementById('filterFrom').value;
+            const dateTo = document.getElementById('filterTo').value;
+
+            filtered = allData.filter(r => {
+                if (areaVal && r.area !== areaVal) return false;
+                if (nivelVal && r.nivel !== nivelVal) return false;
+                if (dateFrom && r.timestamp < new Date(dateFrom)) return false;
+                if (dateTo && r.timestamp > new Date(dateTo + 'T23:59:59')) return false;
+                return true;
+            });
+
+            renderAll();
+        }
+
+        // ============================================================
+        // RENDER ALL
+        // ============================================================
+        function renderAll() {
+            renderSummaryCards(filtered);
+            renderScoreHistogram(filtered);
+            renderLevelDonut(filtered);
+            renderAreaBar(filtered);
+            renderProximidadBar(filtered);
+            renderToolsBar(filtered);
+            renderTasksBar(filtered);
+            renderInterestsRadar(filtered);
+            renderBarriersBar(filtered);
+            renderAvailabilityPie(filtered);
+            renderHorarioPie(filtered);
+            renderSentimentDonut(filtered);
+            renderTimeline(filtered);
+            renderTable(filtered);
+        }
+
+        // ============================================================
+        // SUMMARY CARDS
+        // ============================================================
+        function renderSummaryCards(data) {
+            const total = data.length;
+            const avgScore = total ? Math.round(data.reduce((s, r) => s + r.score, 0) / total) : 0;
+            const countByNivel = countBy(data, 'nivel');
+            const avanzado = countByNivel['Avanzado'] || 0;
+            const principiante = countByNivel['Principiante'] || 0;
+
+            document.getElementById('cardTotal').textContent = total;
+            document.getElementById('cardAvgScore').textContent = avgScore;
+            document.getElementById('cardAvanzado').textContent = total ? Math.round((avanzado / total) * 100) + '%' : '0%';
+            document.getElementById('cardPrincipiante').textContent = total ? Math.round((principiante / total) * 100) + '%' : '0%';
+        }
+
+        // ============================================================
+        // CHART RENDERING FUNCTIONS
+        // ============================================================
+        function renderScoreHistogram(data) {
+            const buckets = [0, 0, 0, 0, 0];
+            data.forEach(r => {
+                if (r.score < 20) buckets[0]++;
+                else if (r.score < 40) buckets[1]++;
+                else if (r.score < 60) buckets[2]++;
+                else if (r.score < 80) buckets[3]++;
+                else buckets[4]++;
+            });
+
+            getOrCreateChart('scoreHistogram', {
+                type: 'bar',
+                data: {
+                    labels: ['0-20', '20-40', '40-60', '60-80', '80-100'],
+                    datasets: [{
+                        label: 'Cantidad',
+                        data: buckets,
+                        backgroundColor: '#1a7d5f',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                }
+            });
+        }
+
+        function renderLevelDonut(data) {
+            const counts = countBy(data, 'nivel');
+            const labels = ['Principiante', 'Intermedio', 'Avanzado'];
+            const values = labels.map(l => counts[l] || 0);
+
+            getOrCreateChart('levelDonut', {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: ['#F44336', '#FF9800', '#4CAF50'],
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        function renderAreaBar(data) {
+            const areas = [...new Set(data.map(r => r.area).filter(Boolean))];
+            const datasets = ['Principiante', 'Intermedio', 'Avanzado'].map((nivel, idx) => {
+                const colors = ['#F44336', '#FF9800', '#4CAF50'];
+                return {
+                    label: nivel,
+                    data: areas.map(area => {
+                        return data.filter(r => r.area === area && r.nivel === nivel).length;
+                    }),
+                    backgroundColor: colors[idx]
+                };
+            });
+
+            getOrCreateChart('areaBar', {
+                type: 'bar',
+                data: { labels: areas, datasets: datasets },
+                options: {
+                    indexAxis: 'x',
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    scales: { y: { beginAtZero: true, stacked: false } },
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+
+        function renderProximidadBar(data) {
+            const buckets = [0, 0, 0, 0, 0, 0];
+            data.forEach(r => {
+                if (r.proximidad >= 0 && r.proximidad <= 5) {
+                    buckets[r.proximidad]++;
+                }
+            });
+
+            getOrCreateChart('proximidadBar', {
+                type: 'bar',
+                data: {
+                    labels: ['Muy alejado', 'Algo alejado', 'Neutral', 'Algo cercano', 'Muy cercano', 'Totalmente involucrado'],
+                    datasets: [{
+                        label: 'Cantidad',
+                        data: buckets,
+                        backgroundColor: '#2a9d7f',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
+        function renderToolsBar(data) {
+            const counts = countItems(data, 'herramientas').slice(0, 8);
+
+            getOrCreateChart('toolsBar', {
+                type: 'bar',
+                data: {
+                    labels: counts.map(c => c[0]),
+                    datasets: [{
+                        label: 'Uso',
+                        data: counts.map(c => c[1]),
+                        backgroundColor: '#f5a623',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { display: false } },
+                    scales: { x: { beginAtZero: true } }
+                }
+            });
+        }
+
+        function renderTasksBar(data) {
+            const counts = countItems(data, 'tareas').slice(0, 8);
+
+            getOrCreateChart('tasksBar', {
+                type: 'bar',
+                data: {
+                    labels: counts.map(c => c[0]),
+                    datasets: [{
+                        label: 'Uso',
+                        data: counts.map(c => c[1]),
+                        backgroundColor: '#4CAF50',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { display: false } },
+                    scales: { x: { beginAtZero: true } }
+                }
+            });
+        }
+
+        function renderInterestsRadar(data) {
+            const counts = countItems(data, 'intereses').slice(0, 8);
+
+            getOrCreateChart('interestsRadar', {
+                type: 'radar',
+                data: {
+                    labels: counts.map(c => c[0]),
+                    datasets: [{
+                        label: 'Interés',
+                        data: counts.map(c => c[1]),
+                        borderColor: '#1a7d5f',
+                        backgroundColor: 'rgba(26, 125, 95, 0.2)',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#1a7d5f'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function renderBarriersBar(data) {
+            const counts = countItems(data, 'barreras').slice(0, 8);
+
+            getOrCreateChart('barriersBar', {
+                type: 'bar',
+                data: {
+                    labels: counts.map(c => c[0]),
+                    datasets: [{
+                        label: 'Barrera',
+                        data: counts.map(c => c[1]),
+                        backgroundColor: '#F44336',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { display: false } },
+                    scales: { x: { beginAtZero: true } }
+                }
+            });
+        }
+
+        function renderAvailabilityPie(data) {
+            const counts = countBy(data, 'disponibilidad');
+            const labels = Object.keys(counts);
+            const values = Object.values(counts);
+
+            getOrCreateChart('availabilityPie', {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: ['#FF9800', '#FFC107', '#4CAF50', '#2196F3'],
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+
+        function renderHorarioPie(data) {
+            const counts = countBy(data, 'horario');
+            const labels = Object.keys(counts).filter(Boolean);
+            const values = labels.map(l => counts[l]);
+
+            getOrCreateChart('horarioPie', {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: ['#9C27B0', '#3F51B5', '#2196F3', '#00BCD4'],
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+
+        function renderSentimentDonut(data) {
+            const counts = countBy(data, 'sentimiento');
+            const labels = Object.keys(counts);
+            const values = Object.values(counts);
+
+            getOrCreateChart('sentimentDonut', {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: ['#4CAF50', '#f1f1f1', '#F44336'],
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+        }
+
+        function renderTimeline(data) {
+            const byDay = {};
+            data.forEach(r => {
+                const day = r.timestamp.toISOString().slice(0, 10);
+                byDay[day] = (byDay[day] || 0) + 1;
+            });
+
+            const sorted = Object.entries(byDay).sort(([a], [b]) => a.localeCompare(b));
+            const labels = sorted.map(([d]) => d);
+            const values = sorted.map(([, v]) => v);
+
+            getOrCreateChart('timeline', {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Respuestas por día',
+                        data: values,
+                        borderColor: '#1a7d5f',
+                        backgroundColor: 'rgba(26, 125, 95, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+        }
+
+        // ============================================================
+        // UTILITY FUNCTIONS
+        // ============================================================
+        function getOrCreateChart(canvasId, config) {
+            if (chartInstances[canvasId]) {
+                chartInstances[canvasId].destroy();
+            }
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            chartInstances[canvasId] = new Chart(ctx, config);
+        }
+
+        function countBy(data, field) {
+            const counts = {};
+            data.forEach(r => {
+                const val = r[field];
+                counts[val] = (counts[val] || 0) + 1;
+            });
+            return counts;
+        }
+
+        function countItems(data, field) {
+            const counts = {};
+            data.forEach(r => {
+                (r[field] || []).forEach(item => {
+                    counts[item] = (counts[item] || 0) + 1;
+                });
+            });
+            return Object.entries(counts).sort((a, b) => b[1] - a[1]);
+        }
+
+        // ============================================================
+        // DATA TABLE
+        // ============================================================
+        function renderTable(data) {
+            const tableSearch = document.getElementById('tableSearch').value.toLowerCase();
+            const display = data.filter(r =>
+                r.nombre.toLowerCase().includes(tableSearch) ||
+                r.email.toLowerCase().includes(tableSearch) ||
+                r.area.toLowerCase().includes(tableSearch)
+            );
+
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = display.map(r => `
+                <tr>
+                    <td>${r.timestamp.toLocaleDateString('es-AR', {year:'2-digit', month:'2-digit', day:'2-digit'})}</td>
+                    <td>${r.nombre}</td>
+                    <td>${maskEmail(r.email)}</td>
+                    <td>${r.area}</td>
+                    <td>${r.puesto}</td>
+                    <td><strong>${r.score}</strong></td>
+                    <td>${r.nivel}</td>
+                    <td><span class="sentiment-badge sentiment-${r.sentimiento.toLowerCase()}">${r.sentimiento}</span></td>
+                </tr>
+            `).join('') || '<tr><td colspan="8" style="text-align: center; color: var(--text-light);">No hay resultados</td></tr>';
+        }
+
+        function maskEmail(email) {
+            const [name, domain] = email.split('@');
+            return name[0] + '***@' + domain;
+        }
+
+        // ============================================================
+        // EXPORT CSV
+        // ============================================================
+        function exportCSV() {
+            const headers = [
+                'Timestamp', 'Nombre', 'Email', 'Área', 'Puesto', 'Antigüedad',
+                'Proximidad', 'Herramientas', 'Tareas', 'Intereses', 'Barreras',
+                'Disponibilidad', 'Horario', 'Score', 'Nivel', 'Sentimiento'
+            ];
+
+            const rows = filtered.map(r => [
+                r.timestamp.toLocaleString('es-AR'),
+                r.nombre,
+                r.email,
+                r.area,
+                r.puesto,
+                r.antiguedad,
+                r.proximidad,
+                r.herramientas.join('|'),
+                r.tareas.join('|'),
+                r.intereses.join('|'),
+                r.barreras.join('|'),
+                r.disponibilidad,
+                r.horario,
+                r.score,
+                r.nivel,
+                r.sentimiento
+            ]);
+
+            const csv = [headers, ...rows]
+                .map(r => r.map(v => '"' + String(v || '').replace(/"/g, '""') + '"').join(','))
+                .join('\n');
+
+            const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'ialab_respuestas_' + new Date().toISOString().slice(0, 10) + '.csv';
+            a.click();
+        }
+    </script>
+</body>
+</html>
