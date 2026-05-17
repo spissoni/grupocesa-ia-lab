@@ -701,7 +701,13 @@
                     // Parse format: "17/5/2026, 2:15:55"
                     const match = ts.match(/(\d+)\/(\d+)\/(\d+),\s*(\d+):(\d+):(\d+)/);
                     if (match) {
-                        timestamp = new Date(match[3], parseInt(match[2]) - 1, match[1], match[4], match[5], match[6]);
+                        const day = parseInt(match[1]);
+                        const month = parseInt(match[2]) - 1;
+                        const year = parseInt(match[3]);
+                        const hour = parseInt(match[4]);
+                        const min = parseInt(match[5]);
+                        const sec = parseInt(match[6]);
+                        timestamp = new Date(year, month, day, hour, min, sec);
                     } else {
                         timestamp = new Date(ts);
                     }
