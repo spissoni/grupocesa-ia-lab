@@ -596,6 +596,62 @@
         // ============================================================
         // DATA FETCHING & PARSING
         // ============================================================
+        function parseCSV(csv) {
+            const lines = [];
+            let current = '';
+            let inQuotes = false;
+            for (let i = 0; i < csv.length; i++) {
+                const char = csv[i];
+                if (char === '"') {
+                    if (inQuotes && csv[i + 1] === '"') {
+                        current += '"';
+                        i++;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === '\n' && !inQuotes) {
+                    lines.push(current);
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            if (current) lines.push(current);
+
+            const rows = lines.map(line => {
+                const cells = [];
+                let cell = '';
+                let inQuotes = false;
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    if (char === '"') {
+                        if (inQuotes && line[i + 1] === '"') {
+                            cell += '"';
+                            i++;
+                        } else {
+                            inQuotes = !inQuotes;
+                        }
+                    } else if (char === ',' && !inQuotes) {
+                        let val = cell.trim();
+                        if (val.startsWith('"') && val.endsWith('"')) {
+                            val = val.slice(1, -1);
+                        }
+                        cells.push(val);
+                        cell = '';
+                    } else {
+                        cell += char;
+                    }
+                }
+                let val = cell.trim();
+                if (val.startsWith('"') && val.endsWith('"')) {
+                    val = val.slice(1, -1);
+                }
+                cells.push(val);
+                return cells;
+            });
+            return rows;
+        }
+
         async function fetchData() {
             const loading = document.querySelector('.loading');
             const error = document.querySelector('.error');
@@ -605,20 +661,25 @@
             try {
                 const resp = await fetch(API_URL);
                 const csv = await resp.text();
-                const lines = csv.split('\n').filter(l => l.trim());
-                const headers = lines[0].split(',').map(h => h.trim());
+                const rows = parseCSV(csv);
 
-                const rows = [];
-                for (let i = 1; i < lines.length; i++) {
-                    const cells = lines[i].split(',');
-                    const row = {};
-                    headers.forEach((h, idx) => {
-                        row[h] = cells[idx] ? cells[idx].trim() : '';
-                    });
-                    if (row['Nombre']) rows.push(row);
+                if (rows.length < 2) {
+                    allData = [];
+                    applyFilters();
+                    return;
                 }
 
-                allData = parseRows(rows);
+                const headers = rows[0];
+                const dataRows = [];
+                for (let i = 1; i < rows.length; i++) {
+                    const row = {};
+                    headers.forEach((h, idx) => {
+                        row[h] = rows[i][idx] || '';
+                    });
+                    if (row['Nombre']) dataRows.push(row);
+                }
+
+                allData = parseRows(dataRows);
                 applyFilters();
 
             } catch (e) {
@@ -633,8 +694,20 @@
         }
 
         function parseRows(rows) {
-            return rows.map(row => ({
-                timestamp: new Date(row['Timestamp']),
+            return rows.map(row => {
+                let ts = row['Timestamp'] || '';
+                let timestamp = new Date();
+                if (ts) {
+                    // Parse format: "17/5/2026, 2:15:55"
+                    const match = ts.match(/(\d+)\/(\d+)\/(\d+),\s*(\d+):(\d+):(\d+)/);
+                    if (match) {
+                        timestamp = new Date(match[3], parseInt(match[2]) - 1, match[1], match[4], match[5], match[6]);
+                    } else {
+                        timestamp = new Date(ts);
+                    }
+                }
+                return {
+                timestamp: timestamp,
                 nombre: row['Nombre'] || '',
                 email: row['Email'] || '',
                 area: row['Área'] || row['Area'] || '',
@@ -650,7 +723,8 @@
                 score: parseFloat(row['Score']) || 0,
                 nivel: cleanLevel(row['Nivel'] || ''),
                 sentimiento: row['Sentimiento'] || 'Neutral'
-            }));
+            };
+            });
         }
 
         function splitPipe(str) {
