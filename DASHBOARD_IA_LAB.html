@@ -550,9 +550,10 @@
         // ============================================================
         // CONSTANTS
         // ============================================================
-        const WEBHOOK_BASE = 'https://script.google.com/macros/s/AKfycbwMPX2dh4cWLHwjffM2oTrdY5G6aZOcwEW7jiGxjGf7MfKwUJkZZuP1nzHDtlNmjpNAiw/exec';
         const API_TOKEN = 'GRUPOCESA2026';
-        const API_URL = WEBHOOK_BASE + '?token=' + API_TOKEN;
+        const SHEET_ID = 'KSs7HOSckdCi-w0HJUslAhprEBhw5xRNoCuI4ZmsDZs';
+        const SHEET_NAME = 'Respuestas';
+        const API_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0`;
 
         // ============================================================
         // STATE
@@ -603,11 +604,21 @@
 
             try {
                 const resp = await fetch(API_URL);
-                const json = await resp.json();
+                const csv = await resp.text();
+                const lines = csv.split('\n').filter(l => l.trim());
+                const headers = lines[0].split(',').map(h => h.trim());
 
-                if (!json.success) throw new Error(json.error || 'API error');
+                const rows = [];
+                for (let i = 1; i < lines.length; i++) {
+                    const cells = lines[i].split(',');
+                    const row = {};
+                    headers.forEach((h, idx) => {
+                        row[h] = cells[idx] ? cells[idx].trim() : '';
+                    });
+                    if (row['Nombre']) rows.push(row);
+                }
 
-                allData = parseRows(json.data || []);
+                allData = parseRows(rows);
                 applyFilters();
 
             } catch (e) {
@@ -615,6 +626,7 @@
                     error.textContent = '❌ No se pudieron cargar los datos: ' + e.message;
                     error.style.display = 'block';
                 }
+                console.error(e);
             } finally {
                 if (loading) loading.style.display = 'none';
             }
