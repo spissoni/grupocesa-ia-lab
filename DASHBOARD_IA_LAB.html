@@ -597,55 +597,50 @@
         // DATA FETCHING & PARSING
         // ============================================================
         function parseCSV(csv) {
+            const lines = csv.split(/\r?\n/);
             const rows = [];
-            let row = [];
-            let cell = '';
-            let inQuotes = false;
 
-            for (let i = 0; i < csv.length; i++) {
-                const char = csv[i];
-                const nextChar = csv[i + 1];
+            for (let lineIdx = 0; lineIdx < lines.length; lineIdx++) {
+                const line = lines[lineIdx];
+                if (!line.trim()) continue;
 
-                if (char === '"') {
-                    if (inQuotes && nextChar === '"') {
-                        cell += '"';
-                        i++;
-                    } else {
-                        inQuotes = !inQuotes;
-                    }
-                } else if (char === ',' && !inQuotes) {
-                    row.push(cell.trim());
-                    cell = '';
-                } else if ((char === '\n' || char === '\r') && !inQuotes) {
-                    if (cell.trim() || row.length > 0) {
-                        row.push(cell.trim());
-                        if (row.some(c => c.length > 0)) {
-                            rows.push(row);
+                const cells = [];
+                let cell = '';
+                let inQuotes = false;
+
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    const nextChar = line[i + 1];
+
+                    if (char === '"') {
+                        if (inQuotes && nextChar === '"') {
+                            cell += '"';
+                            i++;
+                        } else {
+                            inQuotes = !inQuotes;
                         }
-                        row = [];
+                    } else if (char === ',' && !inQuotes) {
+                        let val = cell.trim();
+                        if (val.startsWith('"') && val.endsWith('"')) {
+                            val = val.slice(1, -1).replace(/""/g, '"');
+                        }
+                        cells.push(val);
                         cell = '';
+                    } else {
+                        cell += char;
                     }
-                    if (char === '\r' && nextChar === '\n') i++;
-                } else {
-                    cell += char;
                 }
+
+                let val = cell.trim();
+                if (val.startsWith('"') && val.endsWith('"')) {
+                    val = val.slice(1, -1).replace(/""/g, '"');
+                }
+                cells.push(val);
+
+                rows.push(cells);
             }
 
-            if (cell.trim() || row.length > 0) {
-                row.push(cell.trim());
-                if (row.some(c => c.length > 0)) {
-                    rows.push(row);
-                }
-            }
-
-            return rows.map(row =>
-                row.map(cell => {
-                    if (cell.startsWith('"') && cell.endsWith('"')) {
-                        return cell.slice(1, -1).replace(/""/g, '"');
-                    }
-                    return cell;
-                })
-            );
+            return rows;
         }
 
         async function fetchData() {
