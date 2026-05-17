@@ -45,7 +45,9 @@ function analyzeSentiment(text) {
 }
 
 function doOptions(e) {
-  return HtmlService.createHtmlOutput().setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+  return ContentService.createTextOutput()
+    .setMimeType(ContentService.MimeType.JSON)
+    .append('{}');
 }
 
 function doGet(e) {
@@ -77,15 +79,17 @@ function doGet(e) {
 
 function doPost(e) {
   try {
-    const data = JSON.parse(e.postData.contents);
+    const data = e.parameter;
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     const sheet = ss.getSheetByName(SHEET_RESPONSES);
     let score = 0;
     score += 15;
     score += parseInt(data.proximidad || 0) * 12;
-    const herramientasCount = data.herramientas ? data.herramientas.length : 0;
+    const herramientas = data.herramientas ? data.herramientas.split('|').filter(x => x) : [];
+    const herramientasCount = herramientas.length;
     score += Math.min(herramientasCount * 5, 25);
-    const tareasCount = data.tareas ? data.tareas.length : 0;
+    const tareas = data.tareas ? data.tareas.split('|').filter(x => x) : [];
+    const tareasCount = tareas.length;
     score += Math.min(tareasCount * 4, 20);
     const tareaLength = data.tareaRepetitiva ? data.tareaRepetitiva.length : 0;
     if (tareaLength > 50) {
@@ -93,7 +97,8 @@ function doPost(e) {
     } else if (tareaLength > 20) {
       score += 5;
     }
-    const interesCount = data.interes ? data.interes.length : 0;
+    const interes = data.interes ? data.interes.split('|').filter(x => x) : [];
+    const interesCount = interes.length;
     score += Math.min(interesCount * 3, 15);
     score = Math.min(Math.max(score, 0), 100);
     let level = '';
@@ -106,7 +111,7 @@ function doPost(e) {
     }
     const fullText = (data.comentarios || '') + ' ' + (data.tareaRepetitiva || '');
     const sentiment = analyzeSentiment(fullText);
-    sheet.appendRow([new Date().toLocaleString('es-AR'),data.nombre || '',data.email || '',data.area || '',data.puesto || '',data.antiguedad || '',data.proximidad || '',data.herramientas ? data.herramientas.join('|') : '',data.tareas ? data.tareas.join('|') : '',data.tareaRepetitiva || '',data.interes ? data.interes.join('|') : '',data.barreras ? data.barreras.join('|') : '',data.disponibilidad || '',data.horario || '',data.comentarios || '',score,level,sentiment.label,sentiment.score]);
+    sheet.appendRow([new Date().toLocaleString('es-AR'),data.nombre || '',data.email || '',data.area || '',data.puesto || '',data.antiguedad || '',data.proximidad || '',data.herramientas || '',data.tareas || '',data.tareaRepetitiva || '',data.interes || '',data.barreras || '',data.disponibilidad || '',data.horario || '',data.comentarios || '',score,level,sentiment.label,sentiment.score]);
     sendConfirmationEmail(data.nombre, data.email, score, level);
     return ContentService.createTextOutput(JSON.stringify({success: true, message: 'Respuesta guardada correctamente', nombre: data.nombre, score: score, level: level, sentimiento: sentiment.label})).setMimeType(ContentService.MimeType.JSON);
   } catch (error) {

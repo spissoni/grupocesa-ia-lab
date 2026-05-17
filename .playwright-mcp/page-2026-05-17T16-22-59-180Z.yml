@@ -1,0 +1,50 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: GRUPOCESA
+      - generic [ref=e5]: Etapa 1 de 3
+    - heading "🚀 Relevamiento IA LAB" [level=1] [ref=e6]
+    - paragraph [ref=e7]: Ayudándonos a entender el estado actual de tu conocimiento y uso de IA
+  - generic [ref=e8]:
+    - generic [ref=e9]:
+      - generic [ref=e11]: "1"
+      - generic [ref=e14]: "2"
+      - generic [ref=e17]: "3"
+    - generic [ref=e20]: 33% completado
+  - generic [ref=e24]:
+    - heading "📋 Datos Personales" [level=3] [ref=e25]
+    - generic [ref=e26]:
+      - generic [ref=e27]: Nombre Completo *
+      - textbox "Nombre Completo *" [ref=e28]:
+        - /placeholder: "Ej: Juan Pérez García"
+    - generic [ref=e29]:
+      - generic [ref=e30]: Email *
+      - textbox "Email *" [ref=e31]:
+        - /placeholder: tu.email@empresa.com
+    - generic [ref=e32]:
+      - generic [ref=e33]: Área / Departamento *
+      - combobox "Área / Departamento *" [ref=e34]:
+        - option "-- Selecciona tu área --" [selected]
+        - option "Comercial / Ventas"
+        - option "Operaciones"
+        - option "Marketing / Comunicación"
+        - option "RRHH / Recursos Humanos"
+        - option "IT / Tecnología"
+        - option "Finanzas / Contabilidad"
+        - option "Dirección / Management"
+        - option "Otro"
+    - generic [ref=e35]:
+      - generic [ref=e36]: Puesto / Rol *
+      - textbox "Puesto / Rol *" [ref=e37]:
+        - /placeholder: "Ej: Gerente de Proyectos"
+    - generic [ref=e38]:
+      - generic [ref=e39]: Antigüedad en la empresa
+      - combobox "Antigüedad en la empresa" [ref=e40]:
+        - option "-- Selecciona --" [selected]
+        - option "Menos de 6 meses"
+        - option "6 meses - 1 año"
+        - option "1 - 2 años"
+        - option "2 - 5 años"
+        - option "Más de 5 años"
+  - button "Siguiente →" [ref=e43] [cursor=pointer]
+  - generic [ref=e44]: ✓ Guardado automáticamente
