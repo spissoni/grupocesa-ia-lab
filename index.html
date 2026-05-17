@@ -1278,28 +1278,35 @@
 
             if (!validateCurrentTab()) return;
 
-            const data = {
-                nombre: document.getElementById('nombre').value,
-                email: document.getElementById('email').value,
-                area: document.getElementById('area').value,
-                puesto: document.getElementById('puesto').value,
-                antiguedad: document.getElementById('antiguedad').value,
-                proximidad: document.getElementById('proximidad').value,
-                herramientas: Array.from(document.querySelectorAll('input[name="herramientas"]:checked')).map(e => e.value),
-                tareas: Array.from(document.querySelectorAll('input[name="tareas"]:checked')).map(e => e.value),
-                tareaRepetitiva: document.getElementById('tareaRepetitiva').value,
-                interes: Array.from(document.querySelectorAll('input[name="interes"]:checked')).map(e => e.value),
-                barreras: Array.from(document.querySelectorAll('input[name="barreras"]:checked')).map(e => e.value),
-                disponibilidad: document.getElementById('disponibilidad').value,
-                horario: document.getElementById('horario').value,
-                comentarios: document.getElementById('comentarios').value
-            };
+            const formData = new FormData();
+            formData.append('nombre', document.getElementById('nombre').value);
+            formData.append('email', document.getElementById('email').value);
+            formData.append('area', document.getElementById('area').value);
+            formData.append('puesto', document.getElementById('puesto').value);
+            formData.append('antiguedad', document.getElementById('antiguedad').value);
+            formData.append('proximidad', document.getElementById('proximidad').value);
+            formData.append('herramientas', Array.from(document.querySelectorAll('input[name="herramientas"]:checked')).map(e => e.value).join('|'));
+            formData.append('tareas', Array.from(document.querySelectorAll('input[name="tareas"]:checked')).map(e => e.value).join('|'));
+            formData.append('tareaRepetitiva', document.getElementById('tareaRepetitiva').value);
+            formData.append('interes', Array.from(document.querySelectorAll('input[name="interes"]:checked')).map(e => e.value).join('|'));
+            formData.append('barreras', Array.from(document.querySelectorAll('input[name="barreras"]:checked')).map(e => e.value).join('|'));
+            formData.append('disponibilidad', document.getElementById('disponibilidad').value);
+            formData.append('horario', document.getElementById('horario').value);
+            formData.append('comentarios', document.getElementById('comentarios').value);
 
             fetch(WEBHOOK_URL, {
                 method: 'POST',
                 mode: 'no-cors',
-                body: JSON.stringify(data)
+                body: formData
             });
+
+            const data = {
+                proximidad: document.getElementById('proximidad').value,
+                herramientas: Array.from(document.querySelectorAll('input[name="herramientas"]:checked')).map(e => e.value),
+                tareas: Array.from(document.querySelectorAll('input[name="tareas"]:checked')).map(e => e.value),
+                tareaRepetitiva: document.getElementById('tareaRepetitiva').value,
+                interes: Array.from(document.querySelectorAll('input[name="interes"]:checked')).map(e => e.value)
+            };
 
             document.getElementById('surveyForm').style.display = 'none';
             document.getElementById('buttonGroup').style.display = 'none';
