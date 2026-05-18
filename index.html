@@ -1286,7 +1286,12 @@
         async function handleSubmit(e) {
             e.preventDefault();
 
-            if (!validateCurrentTab()) return;
+            console.log('handleSubmit ejecutado - tab actual:', currentTabIndex);
+
+            // Solo validar si no estamos en la última tab
+            if (currentTabIndex < tabs.length - 1) {
+                if (!validateCurrentTab()) return;
+            }
 
             const formData = new FormData();
             formData.append('nombre', document.getElementById('nombre').value);
@@ -1354,6 +1359,8 @@
             document.getElementById('successSection').classList.add('active');
 
             localStorage.removeItem(STORAGE_KEY);
+
+            console.log('✅ Pantalla de éxito mostrada - Score:', score, 'Nivel:', level);
         }
 
         // ============================================================
