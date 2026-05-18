@@ -11,10 +11,12 @@ function doPost(e) {
     const tareas = (data.tareas || '').split('|').filter(x => x).length;
     const interes = (data.interes || '').split('|').filter(x => x).length;
     const tareaLen = (data.tareaRepetitiva || '').length;
+    const tareaNoRepLen = (data.tareaNoRepetitiva || '').length;
 
     score += Math.min(herramientas * 5, 25);
     score += Math.min(tareas * 4, 20);
     score += (tareaLen > 50 ? 10 : tareaLen > 20 ? 5 : 0);
+    score += (tareaNoRepLen > 50 ? 10 : tareaNoRepLen > 20 ? 5 : 0);
     score += Math.min(interes * 3, 15);
     score = Math.min(Math.max(score, 0), 100);
 
@@ -31,6 +33,7 @@ function doPost(e) {
       data.herramientas || '',
       data.tareas || '',
       data.tareaRepetitiva || '',
+      data.tareaNoRepetitiva || '',
       data.interes || '',
       data.barreras || '',
       data.disponibilidad || '',
@@ -74,6 +77,53 @@ function setupSheet() {
   }
 
   sheet.clear();
-  sheet.appendRow(['Timestamp','Nombre','Email','Área','Puesto','Antigüedad','Proximidad','Herramientas','Tareas','Tarea Repetitiva','Intereses','Barreras','Disponibilidad','Horario','Comentarios','Score','Nivel','Sentimiento','SentimientoScore']);
+  sheet.appendRow(['Timestamp','Nombre','Email','Área','Puesto','Antigüedad','Proximidad','Herramientas','Tareas','Tarea Repetitiva','Tarea No Repetitiva','Intereses','Barreras','Disponibilidad','Horario','Comentarios','Score','Nivel','Sentimiento','SentimientoScore']);
   Logger.log('✅ Sheet listo');
+}
+
+// ============================================================
+// RECALCULAR TODOS LOS SCORES
+// ============================================================
+
+function recalcularTodos() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = ss.getSheetByName(SHEET_RESPONSES);
+  const data = sheet.getDataRange().getValues();
+
+  const headers = data[0];
+
+  const proxIdx = headers.indexOf('Proximidad');
+  const herramIdx = headers.indexOf('Herramientas');
+  const tareasIdx = headers.indexOf('Tareas');
+  const tareaRepIdx = headers.indexOf('Tarea Repetitiva');
+  const tareaNoRepIdx = headers.indexOf('Tarea No Repetitiva');
+  const interesIdx = headers.indexOf('Intereses');
+  const scoreIdx = headers.indexOf('Score');
+  const nivelIdx = headers.indexOf('Nivel');
+
+  for (let i = 1; i < data.length; i++) {
+    const row = data[i];
+
+    let score = 15 + parseInt(row[proxIdx] || 0) * 12;
+    const herramientas = (row[herramIdx] || '').split('|').filter(x => x).length;
+    const tareas = (row[tareasIdx] || '').split('|').filter(x => x).length;
+    const interes = (row[interesIdx] || '').split('|').filter(x => x).length;
+    const tareaLen = (row[tareaRepIdx] || '').length;
+    const tareaNoRepLen = (row[tareaNoRepIdx] || '').length;
+
+    score += Math.min(herramientas * 5, 25);
+    score += Math.min(tareas * 4, 20);
+    score += (tareaLen > 50 ? 10 : tareaLen > 20 ? 5 : 0);
+    score += (tareaNoRepLen > 50 ? 10 : tareaNoRepLen > 20 ? 5 : 0);
+    score += Math.min(interes * 3, 15);
+    score = Math.min(Math.max(score, 0), 100);
+
+    const level = score >= 67 ? '🟢 Avanzado' : score >= 34 ? '🟡 Intermedio' : '🔴 Principiante';
+
+    row[scoreIdx] = score;
+    row[nivelIdx] = level;
+  }
+
+  sheet.getRange(1, 1, data.length, data[0].length).setValues(data);
+  Logger.log('✅ Recálculo completado para ' + (data.length - 1) + ' respuestas');
 }
