@@ -77,7 +77,7 @@ function setupSheet() {
   }
 
   sheet.clear();
-  sheet.appendRow(['Timestamp','Nombre','Email','Área','Puesto','Antigüedad','Proximidad','Herramientas','Tareas','Tarea Repetitiva','Tarea No Repetitiva','Intereses','Barreras','Disponibilidad','Horario','Comentarios','Score','Nivel','Sentimiento','SentimientoScore']);
+  sheet.appendRow(['Timestamp','Nombre','Email','Área','Puesto','Antigüedad','Proximidad','Herramientas','Tareas','Tarea Repetitiva','Tareas Ocasionales','Intereses','Barreras','Disponibilidad','Horario','Comentarios','Score','Nivel','Sentimiento','SentimientoScore']);
   Logger.log('✅ Sheet listo');
 }
 
@@ -96,7 +96,7 @@ function recalcularTodos() {
   const herramIdx = headers.indexOf('Herramientas');
   const tareasIdx = headers.indexOf('Tareas');
   const tareaRepIdx = headers.indexOf('Tarea Repetitiva');
-  const tareaNoRepIdx = headers.indexOf('Tarea No Repetitiva');
+  const tareaNoRepIdx = headers.indexOf('Tareas Ocasionales');
   const interesIdx = headers.indexOf('Intereses');
   const scoreIdx = headers.indexOf('Score');
   const nivelIdx = headers.indexOf('Nivel');
